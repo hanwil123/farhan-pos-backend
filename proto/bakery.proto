@@ -6,6 +6,8 @@ option go_package = "./proto";
 
 
 service BakeryPOSService {
+  rpc CreateCategory (CategoryRequest) returns (CategoryResponse);
+  rpc GetCategory (CategoryResponse) returns (CategoryResponse);
   rpc CreateProduct (CreateProductRequest) returns (ProductResponse);
   rpc GetProduct (GetProductRequest) returns (ProductResponse);
   rpc ListProducts (Empty) returns (ProductList);
@@ -16,6 +18,16 @@ service BakeryPOSService {
 }
 
 message Empty {}
+
+message CategoryRequest {
+  string id = 1;
+  string name = 2;
+}
+
+message CategoryResponse {
+  string id = 1;
+  string name = 2;
+}
 
 message Product {
   string id = 1;

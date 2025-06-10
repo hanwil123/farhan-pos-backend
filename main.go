@@ -13,6 +13,7 @@ import (
 func main() {
 	client.InitializeClient()
 	database.ConnectUser()
+	database.ConnectCategory()
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{

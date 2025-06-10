@@ -12,14 +12,30 @@ import (
 )
 
 func main() {
+	// Initialize database connections
 	database.ConnectUser()
+	database.ConnectCategory()
+
+	// Start gRPC server
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
-	grpcServer := grpc.NewServer()
+
+	// Create gRPC server with options
+	grpcServer := grpc.NewServer(
+		grpc.MaxConcurrentStreams(100),
+		grpc.MaxRecvMsgSize(1024*1024*10), // 10MB
+	)
+
+	// Register services
 	proto.RegisterUserServiceServer(grpcServer, &handler.UserServiceServer{})
-	fmt.Println("UserService is running at :50051")
+	// bakery services
+	proto.RegisterBakeryPOSServiceServer(grpcServer, &handler.BakeryProductServiceServer{})
+
+	fmt.Println("gRPC Server is running at :50051")
+
+	// Start server
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}

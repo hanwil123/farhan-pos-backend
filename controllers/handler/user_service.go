@@ -1,3 +1,4 @@
+// user service - FIXED VERSION
 package handler
 
 import (
@@ -8,7 +9,6 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserServiceServer struct {
@@ -31,25 +31,35 @@ func (s *UserServiceServer) RegisterUser(ctx context.Context, req *proto.Registe
 	}, nil
 }
 
+// FIXED: Hapus parameter fiber.Ctx dan duplikasi validasi password
 func (s *UserServiceServer) LoginUser(ctx context.Context, req *proto.LoginUserRequest) (*proto.LoginUserResponse, error) {
+	// Repository sudah handle validasi password, jadi tidak perlu duplikasi
 	loginUser, err := repository.LoginUser(req.Email, req.Password)
 	if err != nil {
-		return nil, err
+		return &proto.LoginUserResponse{
+			Message:                 "Login failed: " + err.Error(),
+			StatusCodeBerhasilLogin: strconv.Itoa(400),
+		}, nil
 	}
-	errBcrypt := bcrypt.CompareHashAndPassword([]byte(loginUser.Password), []byte(req.Password))
-	if errBcrypt != nil {
-		return nil, errBcrypt
-	}
+
+	// Generate JWT token
 	claim := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Issuer:    strconv.FormatUint(loginUser.Id, 10),
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 	})
+
 	token, errToken := claim.SignedString([]byte(SecretKey))
 	if errToken != nil {
-		return nil, errToken
+		return &proto.LoginUserResponse{
+			Message:                 "Token generation failed",
+			StatusCodeBerhasilLogin: strconv.Itoa(500),
+		}, nil
 	}
+
 	return &proto.LoginUserResponse{
+		Id:                      strconv.FormatUint(loginUser.Id, 10),
 		Token:                   token,
+		Message:                 "Login Successfully",
 		StatusCodeBerhasilLogin: strconv.Itoa(200),
 	}, nil
 }

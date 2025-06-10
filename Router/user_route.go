@@ -9,7 +9,8 @@ import (
 func Setup(app *fiber2.App) {
 	// app.Get("/api/register", Controllers2.Register)
 	app.Post("/api/register", controllerRestApi.Register)
-	// app.Post("/api/login", Controllers2.Login)
+	app.Post("/api/loginuser", controllerRestApi.Login)
+	app.Post("/api/create/category", controllerRestApi.CreateCategoryControllersApi)
 	// app.Get("/api/login", Controllers2.Login)
 	// app.Get("/api/users", Controllers2.User)
 	// app.Post("/api/users", Controllers2.User)

@@ -21,6 +21,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	BakeryPOSService_CreateCategory_FullMethodName = "/proto.BakeryPOSService/CreateCategory"
+	BakeryPOSService_GetCategory_FullMethodName    = "/proto.BakeryPOSService/GetCategory"
 	BakeryPOSService_CreateProduct_FullMethodName  = "/proto.BakeryPOSService/CreateProduct"
 	BakeryPOSService_GetProduct_FullMethodName     = "/proto.BakeryPOSService/GetProduct"
 	BakeryPOSService_ListProducts_FullMethodName   = "/proto.BakeryPOSService/ListProducts"
@@ -33,6 +35,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BakeryPOSServiceClient interface {
+	CreateCategory(ctx context.Context, in *CategoryRequest, opts ...grpc.CallOption) (*CategoryResponse, error)
+	GetCategory(ctx context.Context, in *CategoryResponse, opts ...grpc.CallOption) (*CategoryResponse, error)
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
 	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
 	ListProducts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ProductList, error)
@@ -47,6 +51,26 @@ type bakeryPOSServiceClient struct {
 
 func NewBakeryPOSServiceClient(cc grpc.ClientConnInterface) BakeryPOSServiceClient {
 	return &bakeryPOSServiceClient{cc}
+}
+
+func (c *bakeryPOSServiceClient) CreateCategory(ctx context.Context, in *CategoryRequest, opts ...grpc.CallOption) (*CategoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CategoryResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_CreateCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) GetCategory(ctx context.Context, in *CategoryResponse, opts ...grpc.CallOption) (*CategoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CategoryResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_GetCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *bakeryPOSServiceClient) CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
@@ -113,6 +137,8 @@ func (c *bakeryPOSServiceClient) GetCart(ctx context.Context, in *Cart, opts ...
 // All implementations must embed UnimplementedBakeryPOSServiceServer
 // for forward compatibility.
 type BakeryPOSServiceServer interface {
+	CreateCategory(context.Context, *CategoryRequest) (*CategoryResponse, error)
+	GetCategory(context.Context, *CategoryResponse) (*CategoryResponse, error)
 	CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error)
 	GetProduct(context.Context, *GetProductRequest) (*ProductResponse, error)
 	ListProducts(context.Context, *Empty) (*ProductList, error)
@@ -129,6 +155,12 @@ type BakeryPOSServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBakeryPOSServiceServer struct{}
 
+func (UnimplementedBakeryPOSServiceServer) CreateCategory(context.Context, *CategoryRequest) (*CategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCategory not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) GetCategory(context.Context, *CategoryResponse) (*CategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCategory not implemented")
+}
 func (UnimplementedBakeryPOSServiceServer) CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
 }
@@ -166,6 +198,42 @@ func RegisterBakeryPOSServiceServer(s grpc.ServiceRegistrar, srv BakeryPOSServic
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&BakeryPOSService_ServiceDesc, srv)
+}
+
+func _BakeryPOSService_CreateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).CreateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_CreateCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).CreateCategory(ctx, req.(*CategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_GetCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CategoryResponse)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).GetCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_GetCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).GetCategory(ctx, req.(*CategoryResponse))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _BakeryPOSService_CreateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -283,6 +351,14 @@ var BakeryPOSService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.BakeryPOSService",
 	HandlerType: (*BakeryPOSServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateCategory",
+			Handler:    _BakeryPOSService_CreateCategory_Handler,
+		},
+		{
+			MethodName: "GetCategory",
+			Handler:    _BakeryPOSService_GetCategory_Handler,
+		},
 		{
 			MethodName: "CreateProduct",
 			Handler:    _BakeryPOSService_CreateProduct_Handler,
