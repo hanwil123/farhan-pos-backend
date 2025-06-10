@@ -1,0 +1,102 @@
+// File: bakery_pos.proto
+syntax = "proto3";
+
+package proto;
+option go_package = "./proto";
+
+
+service BakeryPOSService {
+  rpc CreateProduct (CreateProductRequest) returns (ProductResponse);
+  rpc GetProduct (GetProductRequest) returns (ProductResponse);
+  rpc ListProducts (Empty) returns (ProductList);
+  rpc CreatePurchase (CreatePurchaseRequest) returns (PurchaseResponse);
+  rpc AddToCart (Cart) returns (CartResponse);
+  rpc GetCart (Cart) returns (CartResponse);
+  // Tambahkan RPC lain sesuai kebutuhan
+}
+
+message Empty {}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  int32 stock_quantity = 5;
+  string category_id = 6;
+  string image_url = 7;
+}
+
+message CreateProductRequest {
+  string name = 1;
+  string description = 2;
+  double price = 3;
+  int32 stock_quantity = 4;
+  string category_id = 5;
+  string image_url = 6;
+}
+
+message ProductResponse {
+  Product product = 1;
+}
+
+message ProductList {
+  repeated Product products = 1;
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message Customer {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  string address = 5;
+}
+
+message CartItem {
+  string id = 1;
+  string cart_id = 2;
+  string product_id = 3;
+  int32 quantity = 4;
+  double subtotal = 5;
+}
+
+message CartResponse {
+    string id = 1;
+    string cart_id = 2;
+    string customer_id = 3;
+    string product_id = 4;
+    int32 quantity = 5;
+    double subtotal = 6;
+    string status = 7;
+}
+
+message Cart {
+  string id = 1;
+  string customer_id = 2;
+  string status = 3;
+  repeated CartItem items = 4;
+}
+
+message CreatePurchaseRequest {
+  string customer_id = 1;
+  string payment_type = 2;
+  repeated PurchaseItem items = 3;
+}
+
+message PurchaseItem {
+  string product_id = 1;
+  int32 quantity = 2;
+  double price = 3;
+  double subtotal = 4;
+}
+
+message PurchaseResponse {
+  string purchase_id = 1;
+  double total_amount = 2;
+  string purchased_at = 3;
+}
+
