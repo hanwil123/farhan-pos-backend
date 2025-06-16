@@ -9,6 +9,10 @@ import (
 )
 
 func AddCategory(name string) (*models.ProductCategory, error) {
+	if database.CDB == nil {
+		return nil, errors.New("category database connection is not initialized")
+	}
+
 	var existingCategory models.ProductCategory
 
 	// Check if category exists
@@ -31,8 +35,30 @@ func AddCategory(name string) (*models.ProductCategory, error) {
 	return &categoryReq, nil
 }
 
+func ListCategories() ([]models.ProductCategory, error) {
+	fmt.Println("DEBUG: Masuk ke repository.ListCategories")
+	if database.CDB == nil {
+		fmt.Println("ERROR: Koneksi database kategori tidak diinisialisasi.")
+		return nil, errors.New("category database connection is not initialized")
+	}
+
+	var categories []models.ProductCategory
+	fmt.Println("DEBUG: Melakukan query database untuk kategori...")
+	result := database.CDB.Find(&categories)
+	if result.Error != nil {
+		fmt.Printf("ERROR: Gagal mendapatkan kategori dari database: %v\n", result.Error)
+		return nil, fmt.Errorf("failed to get categories: %v", result.Error)
+	}
+	fmt.Printf("DEBUG: Berhasil mendapatkan %d kategori dari database.\n", len(categories))
+	return categories, nil
+}
+
 // AddProduct - Smart function to add product or update stock if duplicate exists
 func AddProduct(name, description string, price float64, stockQuantity int, categoryID uint64, imageURL string) (*models.Product, error) {
+	if database.PDB == nil {
+		return nil, errors.New("product database connection is not initialized")
+	}
+
 	// Normalize input untuk pengecekan duplikasi
 	normalizedName := strings.TrimSpace(strings.ToLower(name))
 	normalizedDescription := strings.TrimSpace(strings.ToLower(description))
@@ -56,7 +82,7 @@ func AddProduct(name, description string, price float64, stockQuantity int, cate
 	var existingProduct models.Product
 
 	// Query untuk mencari produk yang mirip
-	result := database.UDB.Where(
+	result := database.PDB.Where(
 		"LOWER(TRIM(name)) = ? AND LOWER(TRIM(description)) = ? AND category_id = ? AND ABS(price - ?) < 0.01",
 		normalizedName, normalizedDescription, categoryID, price,
 	).First(&existingProduct)
@@ -65,13 +91,13 @@ func AddProduct(name, description string, price float64, stockQuantity int, cate
 		// Produk sudah ada, update stock quantity
 		newStockQuantity := existingProduct.StockQuantity + stockQuantity
 
-		updateResult := database.UDB.Model(&existingProduct).Update("stock_quantity", newStockQuantity)
+		updateResult := database.PDB.Model(&existingProduct).Update("stock_quantity", newStockQuantity)
 		if updateResult.Error != nil {
 			return nil, fmt.Errorf("failed to update stock quantity: %v", updateResult.Error)
 		}
 
 		// Refresh data dari database
-		database.UDB.First(&existingProduct, existingProduct.ID)
+		database.PDB.First(&existingProduct, existingProduct.ID)
 
 		fmt.Printf("DEBUG: Product already exists. Updated stock from %d to %d\n",
 			existingProduct.StockQuantity-stockQuantity, existingProduct.StockQuantity)
@@ -89,11 +115,26 @@ func AddProduct(name, description string, price float64, stockQuantity int, cate
 		ImageURL:      strings.TrimSpace(imageURL),
 	}
 
-	createResult := database.UDB.Create(&newProduct)
+	createResult := database.PDB.Create(&newProduct)
 	if createResult.Error != nil {
 		return nil, fmt.Errorf("failed to create new product: %v", createResult.Error)
 	}
 
 	fmt.Printf("DEBUG: New product created with ID: %d\n", newProduct.ID)
 	return newProduct, nil
+}
+
+func GetCategoryById(id uint64) (*models.ProductCategory, error) {
+	if database.CDB == nil {
+		return nil, errors.New("category database connection is not initialized")
+	}
+
+	var category models.ProductCategory
+
+	result := database.CDB.First(&category, id)
+	if result.Error != nil {
+		return nil, fmt.Errorf("category not found: %v", result.Error)
+	}
+
+	return &category, nil
 }

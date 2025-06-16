@@ -7,7 +7,8 @@ option go_package = "./proto";
 
 service BakeryPOSService {
   rpc CreateCategory (CategoryRequest) returns (CategoryResponse);
-  rpc GetCategory (CategoryResponse) returns (CategoryResponse);
+  rpc ListCategories (Empty) returns (CategoryList);
+  rpc GetCategoryById (GetCategoryByIdRequest) returns (CategoryResponse);
   rpc CreateProduct (CreateProductRequest) returns (ProductResponse);
   rpc GetProduct (GetProductRequest) returns (ProductResponse);
   rpc ListProducts (Empty) returns (ProductList);
@@ -110,5 +111,13 @@ message PurchaseResponse {
   string purchase_id = 1;
   double total_amount = 2;
   string purchased_at = 3;
+}
+
+message GetCategoryByIdRequest {
+  string id = 1;
+}
+
+message CategoryList {
+  repeated CategoryResponse categories = 1;
 }
 

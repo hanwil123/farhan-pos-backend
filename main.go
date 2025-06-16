@@ -14,6 +14,7 @@ func main() {
 	client.InitializeClient()
 	database.ConnectUser()
 	database.ConnectCategory()
+	database.ConnectProduct()
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
@@ -23,6 +24,7 @@ func main() {
 
 	// Router.SetupBookmarks(app)
 	Router.Setup(app)
+	Router.SetupRoutesProduct(app)
 	var port = envPortOr("3000")
 	err := app.Listen(port)
 	if err != nil {

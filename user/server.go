@@ -15,6 +15,7 @@ func main() {
 	// Initialize database connections
 	database.ConnectUser()
 	database.ConnectCategory()
+	database.ConnectProduct()
 
 	// Start gRPC server
 	lis, err := net.Listen("tcp", ":50051")

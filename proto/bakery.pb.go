@@ -971,6 +971,94 @@ func (x *PurchaseResponse) GetPurchasedAt() string {
 	return ""
 }
 
+type GetCategoryByIdRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCategoryByIdRequest) Reset() {
+	*x = GetCategoryByIdRequest{}
+	mi := &file_proto_bakery_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCategoryByIdRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCategoryByIdRequest) ProtoMessage() {}
+
+func (x *GetCategoryByIdRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_bakery_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCategoryByIdRequest.ProtoReflect.Descriptor instead.
+func (*GetCategoryByIdRequest) Descriptor() ([]byte, []int) {
+	return file_proto_bakery_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetCategoryByIdRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type CategoryList struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Categories    []*CategoryResponse    `protobuf:"bytes,1,rep,name=categories,proto3" json:"categories,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CategoryList) Reset() {
+	*x = CategoryList{}
+	mi := &file_proto_bakery_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CategoryList) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CategoryList) ProtoMessage() {}
+
+func (x *CategoryList) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_bakery_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CategoryList.ProtoReflect.Descriptor instead.
+func (*CategoryList) Descriptor() ([]byte, []int) {
+	return file_proto_bakery_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *CategoryList) GetCategories() []*CategoryResponse {
+	if x != nil {
+		return x.Categories
+	}
+	return nil
+}
+
 var File_proto_bakery_proto protoreflect.FileDescriptor
 
 const file_proto_bakery_proto_rawDesc = "" +
@@ -1050,10 +1138,17 @@ const file_proto_bakery_proto_rawDesc = "" +
 	"\vpurchase_id\x18\x01 \x01(\tR\n" +
 	"purchaseId\x12!\n" +
 	"\ftotal_amount\x18\x02 \x01(\x01R\vtotalAmount\x12!\n" +
-	"\fpurchased_at\x18\x03 \x01(\tR\vpurchasedAt2\xf3\x03\n" +
+	"\fpurchased_at\x18\x03 \x01(\tR\vpurchasedAt\"(\n" +
+	"\x16GetCategoryByIdRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"G\n" +
+	"\fCategoryList\x127\n" +
+	"\n" +
+	"categories\x18\x01 \x03(\v2\x17.proto.CategoryResponseR\n" +
+	"categories2\xb2\x04\n" +
 	"\x10BakeryPOSService\x12A\n" +
-	"\x0eCreateCategory\x12\x16.proto.CategoryRequest\x1a\x17.proto.CategoryResponse\x12?\n" +
-	"\vGetCategory\x12\x17.proto.CategoryResponse\x1a\x17.proto.CategoryResponse\x12D\n" +
+	"\x0eCreateCategory\x12\x16.proto.CategoryRequest\x1a\x17.proto.CategoryResponse\x123\n" +
+	"\x0eListCategories\x12\f.proto.Empty\x1a\x13.proto.CategoryList\x12I\n" +
+	"\x0fGetCategoryById\x12\x1d.proto.GetCategoryByIdRequest\x1a\x17.proto.CategoryResponse\x12D\n" +
 	"\rCreateProduct\x12\x1b.proto.CreateProductRequest\x1a\x16.proto.ProductResponse\x12>\n" +
 	"\n" +
 	"GetProduct\x12\x18.proto.GetProductRequest\x1a\x16.proto.ProductResponse\x120\n" +
@@ -1074,50 +1169,55 @@ func file_proto_bakery_proto_rawDescGZIP() []byte {
 	return file_proto_bakery_proto_rawDescData
 }
 
-var file_proto_bakery_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_proto_bakery_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_proto_bakery_proto_goTypes = []any{
-	(*Empty)(nil),                 // 0: proto.Empty
-	(*CategoryRequest)(nil),       // 1: proto.CategoryRequest
-	(*CategoryResponse)(nil),      // 2: proto.CategoryResponse
-	(*Product)(nil),               // 3: proto.Product
-	(*CreateProductRequest)(nil),  // 4: proto.CreateProductRequest
-	(*ProductResponse)(nil),       // 5: proto.ProductResponse
-	(*ProductList)(nil),           // 6: proto.ProductList
-	(*GetProductRequest)(nil),     // 7: proto.GetProductRequest
-	(*Customer)(nil),              // 8: proto.Customer
-	(*CartItem)(nil),              // 9: proto.CartItem
-	(*CartResponse)(nil),          // 10: proto.CartResponse
-	(*Cart)(nil),                  // 11: proto.Cart
-	(*CreatePurchaseRequest)(nil), // 12: proto.CreatePurchaseRequest
-	(*PurchaseItem)(nil),          // 13: proto.PurchaseItem
-	(*PurchaseResponse)(nil),      // 14: proto.PurchaseResponse
+	(*Empty)(nil),                  // 0: proto.Empty
+	(*CategoryRequest)(nil),        // 1: proto.CategoryRequest
+	(*CategoryResponse)(nil),       // 2: proto.CategoryResponse
+	(*Product)(nil),                // 3: proto.Product
+	(*CreateProductRequest)(nil),   // 4: proto.CreateProductRequest
+	(*ProductResponse)(nil),        // 5: proto.ProductResponse
+	(*ProductList)(nil),            // 6: proto.ProductList
+	(*GetProductRequest)(nil),      // 7: proto.GetProductRequest
+	(*Customer)(nil),               // 8: proto.Customer
+	(*CartItem)(nil),               // 9: proto.CartItem
+	(*CartResponse)(nil),           // 10: proto.CartResponse
+	(*Cart)(nil),                   // 11: proto.Cart
+	(*CreatePurchaseRequest)(nil),  // 12: proto.CreatePurchaseRequest
+	(*PurchaseItem)(nil),           // 13: proto.PurchaseItem
+	(*PurchaseResponse)(nil),       // 14: proto.PurchaseResponse
+	(*GetCategoryByIdRequest)(nil), // 15: proto.GetCategoryByIdRequest
+	(*CategoryList)(nil),           // 16: proto.CategoryList
 }
 var file_proto_bakery_proto_depIdxs = []int32{
 	3,  // 0: proto.ProductResponse.product:type_name -> proto.Product
 	3,  // 1: proto.ProductList.products:type_name -> proto.Product
 	9,  // 2: proto.Cart.items:type_name -> proto.CartItem
 	13, // 3: proto.CreatePurchaseRequest.items:type_name -> proto.PurchaseItem
-	1,  // 4: proto.BakeryPOSService.CreateCategory:input_type -> proto.CategoryRequest
-	2,  // 5: proto.BakeryPOSService.GetCategory:input_type -> proto.CategoryResponse
-	4,  // 6: proto.BakeryPOSService.CreateProduct:input_type -> proto.CreateProductRequest
-	7,  // 7: proto.BakeryPOSService.GetProduct:input_type -> proto.GetProductRequest
-	0,  // 8: proto.BakeryPOSService.ListProducts:input_type -> proto.Empty
-	12, // 9: proto.BakeryPOSService.CreatePurchase:input_type -> proto.CreatePurchaseRequest
-	11, // 10: proto.BakeryPOSService.AddToCart:input_type -> proto.Cart
-	11, // 11: proto.BakeryPOSService.GetCart:input_type -> proto.Cart
-	2,  // 12: proto.BakeryPOSService.CreateCategory:output_type -> proto.CategoryResponse
-	2,  // 13: proto.BakeryPOSService.GetCategory:output_type -> proto.CategoryResponse
-	5,  // 14: proto.BakeryPOSService.CreateProduct:output_type -> proto.ProductResponse
-	5,  // 15: proto.BakeryPOSService.GetProduct:output_type -> proto.ProductResponse
-	6,  // 16: proto.BakeryPOSService.ListProducts:output_type -> proto.ProductList
-	14, // 17: proto.BakeryPOSService.CreatePurchase:output_type -> proto.PurchaseResponse
-	10, // 18: proto.BakeryPOSService.AddToCart:output_type -> proto.CartResponse
-	10, // 19: proto.BakeryPOSService.GetCart:output_type -> proto.CartResponse
-	12, // [12:20] is the sub-list for method output_type
-	4,  // [4:12] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	2,  // 4: proto.CategoryList.categories:type_name -> proto.CategoryResponse
+	1,  // 5: proto.BakeryPOSService.CreateCategory:input_type -> proto.CategoryRequest
+	0,  // 6: proto.BakeryPOSService.ListCategories:input_type -> proto.Empty
+	15, // 7: proto.BakeryPOSService.GetCategoryById:input_type -> proto.GetCategoryByIdRequest
+	4,  // 8: proto.BakeryPOSService.CreateProduct:input_type -> proto.CreateProductRequest
+	7,  // 9: proto.BakeryPOSService.GetProduct:input_type -> proto.GetProductRequest
+	0,  // 10: proto.BakeryPOSService.ListProducts:input_type -> proto.Empty
+	12, // 11: proto.BakeryPOSService.CreatePurchase:input_type -> proto.CreatePurchaseRequest
+	11, // 12: proto.BakeryPOSService.AddToCart:input_type -> proto.Cart
+	11, // 13: proto.BakeryPOSService.GetCart:input_type -> proto.Cart
+	2,  // 14: proto.BakeryPOSService.CreateCategory:output_type -> proto.CategoryResponse
+	16, // 15: proto.BakeryPOSService.ListCategories:output_type -> proto.CategoryList
+	2,  // 16: proto.BakeryPOSService.GetCategoryById:output_type -> proto.CategoryResponse
+	5,  // 17: proto.BakeryPOSService.CreateProduct:output_type -> proto.ProductResponse
+	5,  // 18: proto.BakeryPOSService.GetProduct:output_type -> proto.ProductResponse
+	6,  // 19: proto.BakeryPOSService.ListProducts:output_type -> proto.ProductList
+	14, // 20: proto.BakeryPOSService.CreatePurchase:output_type -> proto.PurchaseResponse
+	10, // 21: proto.BakeryPOSService.AddToCart:output_type -> proto.CartResponse
+	10, // 22: proto.BakeryPOSService.GetCart:output_type -> proto.CartResponse
+	14, // [14:23] is the sub-list for method output_type
+	5,  // [5:14] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_proto_bakery_proto_init() }
@@ -1131,7 +1231,7 @@ func file_proto_bakery_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_bakery_proto_rawDesc), len(file_proto_bakery_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

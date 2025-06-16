@@ -17,3 +17,14 @@ func Setup(app *fiber2.App) {
 	// app.Post("/api/logout", Controllers2.Logout)
 
 }
+func SetupRoutesProduct(app *fiber2.App) {
+	// Category routes
+	categoryGroup := app.Group("/api/categories")
+	categoryGroup.Post("/", controllerRestApi.CreateCategoryControllersApi)
+	// categoryGroup.Get("/:id", controllerRestApi.GetCategoryByIdControllerApi)
+	categoryGroup.Get("/allCategories", controllerRestApi.GetCategorieControllerApi)
+
+	// Product routes
+	productGroup := app.Group("/api/products")
+	productGroup.Post("/", controllerRestApi.CreateProductControllerApi)
+}

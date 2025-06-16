@@ -9,7 +9,7 @@ import (
 )
 
 var UserClient proto.UserServiceClient
-var CategoryClient proto.BakeryPOSServiceClient
+var BakeryPOSClient proto.BakeryPOSServiceClient
 
 func InitializeClient() {
 	// Use grpc.NewClient instead of grpc.Dial
@@ -20,5 +20,5 @@ func InitializeClient() {
 	// defer conn.Close()
 
 	UserClient = proto.NewUserServiceClient(conn)
-	CategoryClient = proto.NewBakeryPOSServiceClient(conn)
+	BakeryPOSClient = proto.NewBakeryPOSServiceClient(conn)
 }
