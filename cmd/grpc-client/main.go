@@ -1,4 +1,4 @@
-package client
+package grpcClient
 
 import (
 	"Farhan-Backend-POS/proto"
@@ -11,7 +11,7 @@ import (
 var UserClient proto.UserServiceClient
 var BakeryPOSClient proto.BakeryPOSServiceClient
 
-func InitializeClient() {
+func InitializedClient() {
 	// Use grpc.NewClient instead of grpc.Dial
 	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -21,4 +21,5 @@ func InitializeClient() {
 
 	UserClient = proto.NewUserServiceClient(conn)
 	BakeryPOSClient = proto.NewBakeryPOSServiceClient(conn)
+
 }

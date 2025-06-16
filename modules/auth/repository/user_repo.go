@@ -3,7 +3,7 @@ package repository
 
 import (
 	"Farhan-Backend-POS/database"
-	"Farhan-Backend-POS/models"
+	"Farhan-Backend-POS/modules/auth/dto"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -11,15 +11,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var users = []models.UserModel{
+var users = []dto.UserModel{
 	// Hapus slice lokal ini karena kita menggunakan database
 }
 
-func RegisterUser(name, email, password string) (*models.UserModel, error) {
+func RegisterUser(name, email, password string) (*dto.UserModel, error) {
 	fmt.Println("DEBUG: name =", name)
 
 	// Check di database, bukan di slice lokal
-	var existingUser models.UserModel
+	var existingUser dto.UserModel
 	result := database.UDB.Where("email = ?", email).First(&existingUser)
 	if result.Error == nil {
 		return nil, errors.New("email already exist")
@@ -30,7 +30,7 @@ func RegisterUser(name, email, password string) (*models.UserModel, error) {
 		return nil, err
 	}
 
-	user := &models.UserModel{
+	user := &dto.UserModel{
 		Id:       uint64(rand.Uint32()),
 		Name:     name,
 		Email:    email,
@@ -47,27 +47,27 @@ func RegisterUser(name, email, password string) (*models.UserModel, error) {
 	return user, nil
 }
 
-func LoginUser(email, password string) (models.UserModel, error) {
-	var user models.UserModel
+func LoginUser(email, password string) (dto.UserModel, error) {
+	var user dto.UserModel
 	result := database.UDB.Where("email = ?", email).First(&user)
 	if result.Error != nil {
-		return models.UserModel{}, errors.New("user not found")
+		return dto.UserModel{}, errors.New("user not found")
 	}
 
 	// Validasi password
 	err := bcrypt.CompareHashAndPassword(user.Password, []byte(password))
 	if err != nil {
-		return models.UserModel{}, errors.New("invalid password")
+		return dto.UserModel{}, errors.New("invalid password")
 	}
 
 	return user, nil
 }
 
-func GetUser(id uint64) (models.UserModel, error) {
-	var user models.UserModel
+func GetUser(id uint64) (dto.UserModel, error) {
+	var user dto.UserModel
 	result := database.UDB.Where("id = ?", id).First(&user)
 	if result.Error != nil {
-		return models.UserModel{}, errors.New("user not found")
+		return dto.UserModel{}, errors.New("user not found")
 	}
 	return user, nil
 }

@@ -1,9 +1,10 @@
-package main
+package grpcClient
 
 import (
 	"Farhan-Backend-POS/Router"
-	"Farhan-Backend-POS/client"
+	grpcClient "Farhan-Backend-POS/cmd/grpc-client"
 	"Farhan-Backend-POS/database"
+
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +12,7 @@ import (
 )
 
 func main() {
-	client.InitializeClient()
+	grpcClient.InitializedClient()
 	database.ConnectUser()
 	database.ConnectCategory()
 	database.ConnectProduct()

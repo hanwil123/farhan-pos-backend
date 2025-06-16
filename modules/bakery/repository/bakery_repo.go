@@ -2,18 +2,18 @@ package repository
 
 import (
 	"Farhan-Backend-POS/database"
-	"Farhan-Backend-POS/models"
+	"Farhan-Backend-POS/modules/bakery/dto"
 	"errors"
 	"fmt"
 	"strings"
 )
 
-func AddCategory(name string) (*models.ProductCategory, error) {
+func AddCategory(name string) (*dto.ProductCategory, error) {
 	if database.CDB == nil {
 		return nil, errors.New("category database connection is not initialized")
 	}
 
-	var existingCategory models.ProductCategory
+	var existingCategory dto.ProductCategory
 
 	// Check if category exists
 	resultCategory := database.CDB.Where("name = ?", name).First(&existingCategory)
@@ -22,7 +22,7 @@ func AddCategory(name string) (*models.ProductCategory, error) {
 	}
 
 	// Create new category
-	categoryReq := models.ProductCategory{
+	categoryReq := dto.ProductCategory{
 		Name: name,
 	}
 
@@ -35,14 +35,14 @@ func AddCategory(name string) (*models.ProductCategory, error) {
 	return &categoryReq, nil
 }
 
-func ListCategories() ([]models.ProductCategory, error) {
+func ListCategories() ([]dto.ProductCategory, error) {
 	fmt.Println("DEBUG: Masuk ke repository.ListCategories")
 	if database.CDB == nil {
 		fmt.Println("ERROR: Koneksi database kategori tidak diinisialisasi.")
 		return nil, errors.New("category database connection is not initialized")
 	}
 
-	var categories []models.ProductCategory
+	var categories []dto.ProductCategory
 	fmt.Println("DEBUG: Melakukan query database untuk kategori...")
 	result := database.CDB.Find(&categories)
 	if result.Error != nil {
@@ -54,7 +54,7 @@ func ListCategories() ([]models.ProductCategory, error) {
 }
 
 // AddProduct - Smart function to add product or update stock if duplicate exists
-func AddProduct(name, description string, price float64, stockQuantity int, categoryID uint64, imageURL string) (*models.Product, error) {
+func AddProduct(name, description string, price float64, stockQuantity int, categoryID uint64, imageURL string) (*dto.Product, error) {
 	if database.PDB == nil {
 		return nil, errors.New("product database connection is not initialized")
 	}
@@ -79,7 +79,7 @@ func AddProduct(name, description string, price float64, stockQuantity int, cate
 	// 2. Description sama (case-insensitive)
 	// 3. CategoryID sama
 	// 4. Price sama (dengan toleransi kecil untuk float)
-	var existingProduct models.Product
+	var existingProduct dto.Product
 
 	// Query untuk mencari produk yang mirip
 	result := database.PDB.Where(
@@ -106,7 +106,7 @@ func AddProduct(name, description string, price float64, stockQuantity int, cate
 	}
 
 	// Produk belum ada, buat produk baru
-	newProduct := &models.Product{
+	newProduct := &dto.Product{
 		Name:          strings.TrimSpace(name), // Simpan dengan format asli (tidak lowercase)
 		Description:   strings.TrimSpace(description),
 		Price:         price,
@@ -124,12 +124,12 @@ func AddProduct(name, description string, price float64, stockQuantity int, cate
 	return newProduct, nil
 }
 
-func GetCategoryById(id uint64) (*models.ProductCategory, error) {
+func GetCategoryById(id uint64) (*dto.ProductCategory, error) {
 	if database.CDB == nil {
 		return nil, errors.New("category database connection is not initialized")
 	}
 
-	var category models.ProductCategory
+	var category dto.ProductCategory
 
 	result := database.CDB.First(&category, id)
 	if result.Error != nil {

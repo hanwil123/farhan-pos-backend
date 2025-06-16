@@ -1,7 +1,7 @@
 package database
 
 import (
-	"Farhan-Backend-POS/models"
+	"Farhan-Backend-POS/modules/bakery/dto"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,5 +15,5 @@ func ConnectProduct() {
 		panic(err)
 	}
 	PDB = connectProduct
-	connectProduct.AutoMigrate(&models.Product{})
+	connectProduct.AutoMigrate(&dto.Product{})
 }

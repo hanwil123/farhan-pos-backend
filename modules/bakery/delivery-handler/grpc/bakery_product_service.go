@@ -1,8 +1,8 @@
-package handler
+package grpcServiceBakery
 
 import (
+	"Farhan-Backend-POS/modules/bakery/repository"
 	"Farhan-Backend-POS/proto"
-	"Farhan-Backend-POS/repository"
 	"context"
 	"fmt"
 	"strconv"

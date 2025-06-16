@@ -1,9 +1,9 @@
 // user service - FIXED VERSION
-package handler
+package grpcServiceAuth
 
 import (
+	"Farhan-Backend-POS/modules/auth/repository"
 	"Farhan-Backend-POS/proto"
-	"Farhan-Backend-POS/repository"
 	"context"
 	"strconv"
 	"time"

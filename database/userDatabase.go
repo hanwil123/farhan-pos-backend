@@ -1,7 +1,7 @@
 package database
 
 import (
-	"Farhan-Backend-POS/models"
+	"Farhan-Backend-POS/modules/auth/dto"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,5 +15,5 @@ func ConnectUser() {
 		panic(err)
 	}
 	UDB = connectUser
-	connectUser.AutoMigrate(&models.UserModel{})
+	connectUser.AutoMigrate(&dto.UserModel{})
 }

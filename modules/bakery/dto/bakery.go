@@ -1,4 +1,4 @@
-package models
+package dto
 
 type Product struct {
 	ID            uint64  `gorm:"primaryKey;autoIncrement" json:"id"`

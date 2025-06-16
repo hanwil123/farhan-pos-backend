@@ -1,8 +1,8 @@
 // user api handler - FIXED VERSION
-package controllerRestApi
+package restapiAuth
 
 import (
-	"Farhan-Backend-POS/client"
+	grpcClient "Farhan-Backend-POS/cmd/grpc-client"
 	"Farhan-Backend-POS/proto"
 	"context"
 	"fmt"
@@ -25,7 +25,7 @@ func Register(c *fiber2.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
-	resp, err := client.UserClient.RegisterUser(ctx, &proto.RegisterUserRequest{
+	resp, err := grpcClient.UserClient.RegisterUser(ctx, &proto.RegisterUserRequest{
 		Name:     data["name"],
 		Email:    data["email"],
 		Password: data["password"],
@@ -57,7 +57,7 @@ func Login(c *fiber2.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
-	respLogin, errLogin := client.UserClient.LoginUser(ctx, &proto.LoginUserRequest{
+	respLogin, errLogin := grpcClient.UserClient.LoginUser(ctx, &proto.LoginUserRequest{
 		Email:    data["email"],
 		Password: data["password"],
 	})

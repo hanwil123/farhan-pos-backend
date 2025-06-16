@@ -1,7 +1,7 @@
 package database
 
 import (
-	"Farhan-Backend-POS/models"
+	"Farhan-Backend-POS/modules/bakery/dto"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,5 +15,5 @@ func ConnectCategory() {
 		panic(err)
 	}
 	CDB = connectCategory
-	connectCategory.AutoMigrate(&models.ProductCategory{})
+	connectCategory.AutoMigrate(&dto.ProductCategory{})
 }

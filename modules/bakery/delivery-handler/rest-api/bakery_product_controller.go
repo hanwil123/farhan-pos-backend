@@ -1,8 +1,8 @@
-package controllerRestApi
+package restapiBakery
 
 import (
-	"Farhan-Backend-POS/client"
-	"Farhan-Backend-POS/models"
+	grpcClient "Farhan-Backend-POS/cmd/grpc-client"
+	"Farhan-Backend-POS/modules/bakery/dto"
 	"Farhan-Backend-POS/proto"
 	"context"
 	"strconv"
@@ -22,7 +22,7 @@ func CreateCategoryControllersApi(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
-	responseCreateCategory, errCreateCategory := client.BakeryPOSClient.CreateCategory(ctx, &proto.CategoryRequest{
+	responseCreateCategory, errCreateCategory := grpcClient.BakeryPOSClient.CreateCategory(ctx, &proto.CategoryRequest{
 		Name: data["name"],
 	})
 	if errCreateCategory != nil {
@@ -36,7 +36,7 @@ func CreateCategoryControllersApi(c *fiber.Ctx) error {
 }
 
 func CreateProductControllerApi(c *fiber.Ctx) error {
-	var data models.Product
+	var data dto.Product
 	if err := c.BodyParser(&data); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid request body",
@@ -60,7 +60,7 @@ func CreateProductControllerApi(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
-	responseAddProduct, errorAddProduct := client.BakeryPOSClient.CreateProduct(ctx, &proto.CreateProductRequest{
+	responseAddProduct, errorAddProduct := grpcClient.BakeryPOSClient.CreateProduct(ctx, &proto.CreateProductRequest{
 		Name:          data.Name,
 		Description:   data.Description,
 		Price:         data.Price,
@@ -94,7 +94,7 @@ func GetCategoryByIdControllerApi(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
-	response, err := client.BakeryPOSClient.GetCategoryById(ctx, &proto.GetCategoryByIdRequest{
+	response, err := grpcClient.BakeryPOSClient.GetCategoryById(ctx, &proto.GetCategoryByIdRequest{
 		Id: categoryId,
 	})
 	if err != nil {
@@ -112,7 +112,7 @@ func GetCategoryByIdControllerApi(c *fiber.Ctx) error {
 func GetCategorieControllerApi(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
-	response, err := client.BakeryPOSClient.ListCategories(ctx, &proto.Empty{})
+	response, err := grpcClient.BakeryPOSClient.ListCategories(ctx, &proto.Empty{})
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to get categories: " + err.Error(),

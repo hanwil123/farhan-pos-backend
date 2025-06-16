@@ -1,4 +1,4 @@
-package models
+package dto
 
 type UserModel struct {
 	Id       uint64 `gorm:"primaryKey" json:"id"`

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"Farhan-Backend-POS/controllers/handler"
 	"Farhan-Backend-POS/database"
+	grpcServiceAuth "Farhan-Backend-POS/modules/auth/delivery-handler/grpc"
+	grpcServiceBakery "Farhan-Backend-POS/modules/bakery/delivery-handler/grpc"
 	"Farhan-Backend-POS/proto"
 	"fmt"
 	"log"
@@ -30,9 +31,9 @@ func main() {
 	)
 
 	// Register services
-	proto.RegisterUserServiceServer(grpcServer, &handler.UserServiceServer{})
+	proto.RegisterUserServiceServer(grpcServer, &grpcServiceAuth.UserServiceServer{})
 	// bakery services
-	proto.RegisterBakeryPOSServiceServer(grpcServer, &handler.BakeryProductServiceServer{})
+	proto.RegisterBakeryPOSServiceServer(grpcServer, &grpcServiceBakery.BakeryProductServiceServer{})
 
 	fmt.Println("gRPC Server is running at :50051")
 
