@@ -29,6 +29,7 @@ func Register(c *fiber2.Ctx) error {
 		Name:     data["name"],
 		Email:    data["email"],
 		Password: data["password"],
+		Role:     data["role"],
 	})
 	if err != nil {
 		return c.Status(fiber2.StatusInternalServerError).JSON(fiber2.Map{
@@ -40,6 +41,7 @@ func Register(c *fiber2.Ctx) error {
 		"id":      resp.Id,
 		"name":    resp.Name,
 		"email":   resp.Email,
+		"Role":    resp.Role,
 		"message": resp.Message,
 		"status":  resp.StatusCodeBerhasilRegister,
 	})

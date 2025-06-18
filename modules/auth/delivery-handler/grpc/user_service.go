@@ -18,7 +18,7 @@ type UserServiceServer struct {
 const SecretKey = "secret"
 
 func (s *UserServiceServer) RegisterUser(ctx context.Context, req *proto.RegisterUserRequest) (*proto.RegisterUserResponse, error) {
-	user, err := repository.RegisterUser(req.Name, req.Email, req.Password)
+	user, err := repository.RegisterUser(req.Name, req.Email, req.Password, req.Role)
 	if err != nil {
 		return nil, err
 	}
@@ -26,6 +26,7 @@ func (s *UserServiceServer) RegisterUser(ctx context.Context, req *proto.Registe
 		Id:                         strconv.FormatUint(user.Id, 10),
 		Name:                       user.Name,
 		Email:                      user.Email,
+		Role:                       user.Role,
 		Message:                    "Register Successfully",
 		StatusCodeBerhasilRegister: strconv.Itoa(200),
 	}, nil

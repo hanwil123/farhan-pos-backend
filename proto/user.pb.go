@@ -154,6 +154,7 @@ type RegisterUserRequest struct {
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	Role          string                 `protobuf:"bytes,4,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -209,13 +210,21 @@ func (x *RegisterUserRequest) GetPassword() string {
 	return ""
 }
 
+func (x *RegisterUserRequest) GetRole() string {
+	if x != nil {
+		return x.Role
+	}
+	return ""
+}
+
 type RegisterUserResponse struct {
 	state                      protoimpl.MessageState `protogen:"open.v1"`
 	Id                         string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name                       string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Email                      string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	Message                    string                 `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
-	StatusCodeBerhasilRegister string                 `protobuf:"bytes,5,opt,name=statusCodeBerhasilRegister,proto3" json:"statusCodeBerhasilRegister,omitempty"`
+	Role                       string                 `protobuf:"bytes,4,opt,name=role,proto3" json:"role,omitempty"`
+	Message                    string                 `protobuf:"bytes,5,opt,name=message,proto3" json:"message,omitempty"`
+	StatusCodeBerhasilRegister string                 `protobuf:"bytes,6,opt,name=statusCodeBerhasilRegister,proto3" json:"statusCodeBerhasilRegister,omitempty"`
 	unknownFields              protoimpl.UnknownFields
 	sizeCache                  protoimpl.SizeCache
 }
@@ -267,6 +276,13 @@ func (x *RegisterUserResponse) GetName() string {
 func (x *RegisterUserResponse) GetEmail() string {
 	if x != nil {
 		return x.Email
+	}
+	return ""
+}
+
+func (x *RegisterUserResponse) GetRole() string {
+	if x != nil {
+		return x.Role
 	}
 	return ""
 }
@@ -342,9 +358,10 @@ type LoginUserResponse struct {
 	Id                      string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name                    string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Email                   string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	Token                   string                 `protobuf:"bytes,4,opt,name=token,proto3" json:"token,omitempty"`
-	Message                 string                 `protobuf:"bytes,5,opt,name=message,proto3" json:"message,omitempty"`
-	StatusCodeBerhasilLogin string                 `protobuf:"bytes,6,opt,name=statusCodeBerhasilLogin,proto3" json:"statusCodeBerhasilLogin,omitempty"`
+	Role                    string                 `protobuf:"bytes,4,opt,name=role,proto3" json:"role,omitempty"`
+	Token                   string                 `protobuf:"bytes,5,opt,name=token,proto3" json:"token,omitempty"`
+	Message                 string                 `protobuf:"bytes,6,opt,name=message,proto3" json:"message,omitempty"`
+	StatusCodeBerhasilLogin string                 `protobuf:"bytes,7,opt,name=statusCodeBerhasilLogin,proto3" json:"statusCodeBerhasilLogin,omitempty"`
 	unknownFields           protoimpl.UnknownFields
 	sizeCache               protoimpl.SizeCache
 }
@@ -400,6 +417,13 @@ func (x *LoginUserResponse) GetEmail() string {
 	return ""
 }
 
+func (x *LoginUserResponse) GetRole() string {
+	if x != nil {
+		return x.Role
+	}
+	return ""
+}
+
 func (x *LoginUserResponse) GetToken() string {
 	if x != nil {
 		return x.Token
@@ -434,27 +458,30 @@ const file_proto_user_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
 	"\x05email\x18\x03 \x01(\tR\x05email\x12<\n" +
-	"\x19statusCodeBerhasilGetUser\x18\x04 \x01(\tR\x19statusCodeBerhasilGetUser\"[\n" +
+	"\x19statusCodeBerhasilGetUser\x18\x04 \x01(\tR\x19statusCodeBerhasilGetUser\"o\n" +
 	"\x13RegisterUserRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x03 \x01(\tR\bpassword\"\xaa\x01\n" +
+	"\bpassword\x18\x03 \x01(\tR\bpassword\x12\x12\n" +
+	"\x04role\x18\x04 \x01(\tR\x04role\"\xbe\x01\n" +
 	"\x14RegisterUserResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
-	"\x05email\x18\x03 \x01(\tR\x05email\x12\x18\n" +
-	"\amessage\x18\x04 \x01(\tR\amessage\x12>\n" +
-	"\x1astatusCodeBerhasilRegister\x18\x05 \x01(\tR\x1astatusCodeBerhasilRegister\"D\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x12\n" +
+	"\x04role\x18\x04 \x01(\tR\x04role\x12\x18\n" +
+	"\amessage\x18\x05 \x01(\tR\amessage\x12>\n" +
+	"\x1astatusCodeBerhasilRegister\x18\x06 \x01(\tR\x1astatusCodeBerhasilRegister\"D\n" +
 	"\x10LoginUserRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"\xb7\x01\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"\xcb\x01\n" +
 	"\x11LoginUserResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
-	"\x05email\x18\x03 \x01(\tR\x05email\x12\x14\n" +
-	"\x05token\x18\x04 \x01(\tR\x05token\x12\x18\n" +
-	"\amessage\x18\x05 \x01(\tR\amessage\x128\n" +
-	"\x17statusCodeBerhasilLogin\x18\x06 \x01(\tR\x17statusCodeBerhasilLogin2\xd6\x01\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x12\n" +
+	"\x04role\x18\x04 \x01(\tR\x04role\x12\x14\n" +
+	"\x05token\x18\x05 \x01(\tR\x05token\x12\x18\n" +
+	"\amessage\x18\x06 \x01(\tR\amessage\x128\n" +
+	"\x17statusCodeBerhasilLogin\x18\a \x01(\tR\x17statusCodeBerhasilLogin2\xd6\x01\n" +
 	"\vUserService\x12:\n" +
 	"\aGetUser\x12\x15.proto.GetUserRequest\x1a\x16.proto.GetUserResponse\"\x00\x12I\n" +
 	"\fRegisterUser\x12\x1a.proto.RegisterUserRequest\x1a\x1b.proto.RegisterUserResponse\"\x00\x12@\n" +

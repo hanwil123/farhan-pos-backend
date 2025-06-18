@@ -22,10 +22,13 @@ func SetupRoutesProduct(app *fiber2.App) {
 	// Category routes
 	categoryGroup := app.Group("/api/categories")
 	categoryGroup.Post("/", restapiBakery.CreateCategoryControllersApi)
-	// categoryGroup.Get("/:id", restapiBakery.GetCategoryByIdControllerApi)
+	categoryGroup.Get("/:id", restapiBakery.GetCategoryByIdControllerApi)
 	categoryGroup.Get("/allCategories", restapiBakery.GetCategorieControllerApi)
 
 	// Product routes
 	productGroup := app.Group("/api/products")
 	productGroup.Post("/", restapiBakery.CreateProductControllerApi)
+	productGroup.Get("/", restapiBakery.GetAllProduct)
+	productGroup.Delete("/deleteProduct/:id", restapiBakery.DeleteProductControllerApi)
+	productGroup.Put("/updateProduct/:id", restapiBakery.UpdateProductControllerApi)
 }

@@ -25,26 +25,55 @@ const (
 	BakeryPOSService_ListCategories_FullMethodName  = "/proto.BakeryPOSService/ListCategories"
 	BakeryPOSService_GetCategoryById_FullMethodName = "/proto.BakeryPOSService/GetCategoryById"
 	BakeryPOSService_CreateProduct_FullMethodName   = "/proto.BakeryPOSService/CreateProduct"
+	BakeryPOSService_UpdateProduct_FullMethodName   = "/proto.BakeryPOSService/UpdateProduct"
+	BakeryPOSService_DeleteProduct_FullMethodName   = "/proto.BakeryPOSService/DeleteProduct"
 	BakeryPOSService_GetProduct_FullMethodName      = "/proto.BakeryPOSService/GetProduct"
 	BakeryPOSService_ListProducts_FullMethodName    = "/proto.BakeryPOSService/ListProducts"
-	BakeryPOSService_CreatePurchase_FullMethodName  = "/proto.BakeryPOSService/CreatePurchase"
-	BakeryPOSService_AddToCart_FullMethodName       = "/proto.BakeryPOSService/AddToCart"
-	BakeryPOSService_GetCart_FullMethodName         = "/proto.BakeryPOSService/GetCart"
+	BakeryPOSService_AdjustStock_FullMethodName     = "/proto.BakeryPOSService/AdjustStock"
+	BakeryPOSService_ReceiveStock_FullMethodName    = "/proto.BakeryPOSService/ReceiveStock"
+	BakeryPOSService_StockOpname_FullMethodName     = "/proto.BakeryPOSService/StockOpname"
+	BakeryPOSService_CreateSale_FullMethodName      = "/proto.BakeryPOSService/CreateSale"
+	BakeryPOSService_PrintReceipt_FullMethodName    = "/proto.BakeryPOSService/PrintReceipt"
+	BakeryPOSService_GetSalesHistory_FullMethodName = "/proto.BakeryPOSService/GetSalesHistory"
+	BakeryPOSService_GenerateReport_FullMethodName  = "/proto.BakeryPOSService/GenerateReport"
+	BakeryPOSService_ListUsers_FullMethodName       = "/proto.BakeryPOSService/ListUsers"
+	BakeryPOSService_CreateUser_FullMethodName      = "/proto.BakeryPOSService/CreateUser"
+	BakeryPOSService_UpdateUser_FullMethodName      = "/proto.BakeryPOSService/UpdateUser"
+	BakeryPOSService_DeleteUser_FullMethodName      = "/proto.BakeryPOSService/DeleteUser"
 )
 
 // BakeryPOSServiceClient is the client API for BakeryPOSService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ==========================================
+// Service
+// ==========================================
 type BakeryPOSServiceClient interface {
+	// Produk
 	CreateCategory(ctx context.Context, in *CategoryRequest, opts ...grpc.CallOption) (*CategoryResponse, error)
 	ListCategories(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CategoryList, error)
 	GetCategoryById(ctx context.Context, in *GetCategoryByIdRequest, opts ...grpc.CallOption) (*CategoryResponse, error)
 	CreateProduct(ctx context.Context, in *CreateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
-	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
-	ListProducts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ProductList, error)
-	CreatePurchase(ctx context.Context, in *CreatePurchaseRequest, opts ...grpc.CallOption) (*PurchaseResponse, error)
-	AddToCart(ctx context.Context, in *Cart, opts ...grpc.CallOption) (*CartResponse, error)
-	GetCart(ctx context.Context, in *Cart, opts ...grpc.CallOption) (*CartResponse, error)
+	UpdateProduct(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
+	DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error)
+	GetProduct(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
+	ListProducts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ProductListResponse, error)
+	// Manajemen Stok (sama dengan produk, tapi bisa ditambah fitur stok manual)
+	AdjustStock(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
+	ReceiveStock(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error)
+	StockOpname(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ProductListResponse, error)
+	// Transaksi Penjualan
+	CreateSale(ctx context.Context, in *SaleRequest, opts ...grpc.CallOption) (*SaleResponse, error)
+	PrintReceipt(ctx context.Context, in *SaleRequest, opts ...grpc.CallOption) (*SaleResponse, error)
+	GetSalesHistory(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListSale, error)
+	// Laporan
+	GenerateReport(ctx context.Context, in *ReportRequest, opts ...grpc.CallOption) (*ReportResponse, error)
+	// Manajemen User
+	ListUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserList, error)
+	CreateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
+	UpdateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
+	DeleteUser(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type bakeryPOSServiceClient struct {
@@ -95,7 +124,27 @@ func (c *bakeryPOSServiceClient) CreateProduct(ctx context.Context, in *CreatePr
 	return out, nil
 }
 
-func (c *bakeryPOSServiceClient) GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
+func (c *bakeryPOSServiceClient) UpdateProduct(ctx context.Context, in *UpdateProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProductResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_UpdateProduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteProductResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_DeleteProduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) GetProduct(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ProductResponse)
 	err := c.cc.Invoke(ctx, BakeryPOSService_GetProduct_FullMethodName, in, out, cOpts...)
@@ -105,9 +154,9 @@ func (c *bakeryPOSServiceClient) GetProduct(ctx context.Context, in *GetProductR
 	return out, nil
 }
 
-func (c *bakeryPOSServiceClient) ListProducts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ProductList, error) {
+func (c *bakeryPOSServiceClient) ListProducts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ProductListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ProductList)
+	out := new(ProductListResponse)
 	err := c.cc.Invoke(ctx, BakeryPOSService_ListProducts_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -115,30 +164,110 @@ func (c *bakeryPOSServiceClient) ListProducts(ctx context.Context, in *Empty, op
 	return out, nil
 }
 
-func (c *bakeryPOSServiceClient) CreatePurchase(ctx context.Context, in *CreatePurchaseRequest, opts ...grpc.CallOption) (*PurchaseResponse, error) {
+func (c *bakeryPOSServiceClient) AdjustStock(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PurchaseResponse)
-	err := c.cc.Invoke(ctx, BakeryPOSService_CreatePurchase_FullMethodName, in, out, cOpts...)
+	out := new(ProductResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_AdjustStock_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *bakeryPOSServiceClient) AddToCart(ctx context.Context, in *Cart, opts ...grpc.CallOption) (*CartResponse, error) {
+func (c *bakeryPOSServiceClient) ReceiveStock(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*ProductResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CartResponse)
-	err := c.cc.Invoke(ctx, BakeryPOSService_AddToCart_FullMethodName, in, out, cOpts...)
+	out := new(ProductResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_ReceiveStock_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *bakeryPOSServiceClient) GetCart(ctx context.Context, in *Cart, opts ...grpc.CallOption) (*CartResponse, error) {
+func (c *bakeryPOSServiceClient) StockOpname(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ProductListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CartResponse)
-	err := c.cc.Invoke(ctx, BakeryPOSService_GetCart_FullMethodName, in, out, cOpts...)
+	out := new(ProductListResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_StockOpname_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) CreateSale(ctx context.Context, in *SaleRequest, opts ...grpc.CallOption) (*SaleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaleResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_CreateSale_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) PrintReceipt(ctx context.Context, in *SaleRequest, opts ...grpc.CallOption) (*SaleResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaleResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_PrintReceipt_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) GetSalesHistory(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListSale, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSale)
+	err := c.cc.Invoke(ctx, BakeryPOSService_GetSalesHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) GenerateReport(ctx context.Context, in *ReportRequest, opts ...grpc.CallOption) (*ReportResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReportResponse)
+	err := c.cc.Invoke(ctx, BakeryPOSService_GenerateReport_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) ListUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UserList, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserList)
+	err := c.cc.Invoke(ctx, BakeryPOSService_ListUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) CreateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, BakeryPOSService_CreateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) UpdateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, BakeryPOSService_UpdateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bakeryPOSServiceClient) DeleteUser(ctx context.Context, in *ProductRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, BakeryPOSService_DeleteUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -148,16 +277,35 @@ func (c *bakeryPOSServiceClient) GetCart(ctx context.Context, in *Cart, opts ...
 // BakeryPOSServiceServer is the server API for BakeryPOSService service.
 // All implementations must embed UnimplementedBakeryPOSServiceServer
 // for forward compatibility.
+//
+// ==========================================
+// Service
+// ==========================================
 type BakeryPOSServiceServer interface {
+	// Produk
 	CreateCategory(context.Context, *CategoryRequest) (*CategoryResponse, error)
 	ListCategories(context.Context, *Empty) (*CategoryList, error)
 	GetCategoryById(context.Context, *GetCategoryByIdRequest) (*CategoryResponse, error)
 	CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error)
-	GetProduct(context.Context, *GetProductRequest) (*ProductResponse, error)
-	ListProducts(context.Context, *Empty) (*ProductList, error)
-	CreatePurchase(context.Context, *CreatePurchaseRequest) (*PurchaseResponse, error)
-	AddToCart(context.Context, *Cart) (*CartResponse, error)
-	GetCart(context.Context, *Cart) (*CartResponse, error)
+	UpdateProduct(context.Context, *UpdateProductRequest) (*ProductResponse, error)
+	DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error)
+	GetProduct(context.Context, *ProductRequest) (*ProductResponse, error)
+	ListProducts(context.Context, *Empty) (*ProductListResponse, error)
+	// Manajemen Stok (sama dengan produk, tapi bisa ditambah fitur stok manual)
+	AdjustStock(context.Context, *ProductRequest) (*ProductResponse, error)
+	ReceiveStock(context.Context, *ProductRequest) (*ProductResponse, error)
+	StockOpname(context.Context, *Empty) (*ProductListResponse, error)
+	// Transaksi Penjualan
+	CreateSale(context.Context, *SaleRequest) (*SaleResponse, error)
+	PrintReceipt(context.Context, *SaleRequest) (*SaleResponse, error)
+	GetSalesHistory(context.Context, *Empty) (*ListSale, error)
+	// Laporan
+	GenerateReport(context.Context, *ReportRequest) (*ReportResponse, error)
+	// Manajemen User
+	ListUsers(context.Context, *Empty) (*UserList, error)
+	CreateUser(context.Context, *User) (*User, error)
+	UpdateUser(context.Context, *User) (*User, error)
+	DeleteUser(context.Context, *ProductRequest) (*Empty, error)
 	mustEmbedUnimplementedBakeryPOSServiceServer()
 }
 
@@ -180,20 +328,50 @@ func (UnimplementedBakeryPOSServiceServer) GetCategoryById(context.Context, *Get
 func (UnimplementedBakeryPOSServiceServer) CreateProduct(context.Context, *CreateProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProduct not implemented")
 }
-func (UnimplementedBakeryPOSServiceServer) GetProduct(context.Context, *GetProductRequest) (*ProductResponse, error) {
+func (UnimplementedBakeryPOSServiceServer) UpdateProduct(context.Context, *UpdateProductRequest) (*ProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateProduct not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProduct not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) GetProduct(context.Context, *ProductRequest) (*ProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProduct not implemented")
 }
-func (UnimplementedBakeryPOSServiceServer) ListProducts(context.Context, *Empty) (*ProductList, error) {
+func (UnimplementedBakeryPOSServiceServer) ListProducts(context.Context, *Empty) (*ProductListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListProducts not implemented")
 }
-func (UnimplementedBakeryPOSServiceServer) CreatePurchase(context.Context, *CreatePurchaseRequest) (*PurchaseResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreatePurchase not implemented")
+func (UnimplementedBakeryPOSServiceServer) AdjustStock(context.Context, *ProductRequest) (*ProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AdjustStock not implemented")
 }
-func (UnimplementedBakeryPOSServiceServer) AddToCart(context.Context, *Cart) (*CartResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddToCart not implemented")
+func (UnimplementedBakeryPOSServiceServer) ReceiveStock(context.Context, *ProductRequest) (*ProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReceiveStock not implemented")
 }
-func (UnimplementedBakeryPOSServiceServer) GetCart(context.Context, *Cart) (*CartResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCart not implemented")
+func (UnimplementedBakeryPOSServiceServer) StockOpname(context.Context, *Empty) (*ProductListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StockOpname not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) CreateSale(context.Context, *SaleRequest) (*SaleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSale not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) PrintReceipt(context.Context, *SaleRequest) (*SaleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PrintReceipt not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) GetSalesHistory(context.Context, *Empty) (*ListSale, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSalesHistory not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) GenerateReport(context.Context, *ReportRequest) (*ReportResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateReport not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) ListUsers(context.Context, *Empty) (*UserList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) CreateUser(context.Context, *User) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) UpdateUser(context.Context, *User) (*User, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedBakeryPOSServiceServer) DeleteUser(context.Context, *ProductRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
 func (UnimplementedBakeryPOSServiceServer) mustEmbedUnimplementedBakeryPOSServiceServer() {}
 func (UnimplementedBakeryPOSServiceServer) testEmbeddedByValue()                          {}
@@ -288,8 +466,44 @@ func _BakeryPOSService_CreateProduct_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BakeryPOSService_UpdateProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).UpdateProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_UpdateProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).UpdateProduct(ctx, req.(*UpdateProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_DeleteProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).DeleteProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_DeleteProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).DeleteProduct(ctx, req.(*DeleteProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _BakeryPOSService_GetProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProductRequest)
+	in := new(ProductRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -301,7 +515,7 @@ func _BakeryPOSService_GetProduct_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: BakeryPOSService_GetProduct_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BakeryPOSServiceServer).GetProduct(ctx, req.(*GetProductRequest))
+		return srv.(BakeryPOSServiceServer).GetProduct(ctx, req.(*ProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -324,56 +538,200 @@ func _BakeryPOSService_ListProducts_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BakeryPOSService_CreatePurchase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreatePurchaseRequest)
+func _BakeryPOSService_AdjustStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BakeryPOSServiceServer).CreatePurchase(ctx, in)
+		return srv.(BakeryPOSServiceServer).AdjustStock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BakeryPOSService_CreatePurchase_FullMethodName,
+		FullMethod: BakeryPOSService_AdjustStock_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BakeryPOSServiceServer).CreatePurchase(ctx, req.(*CreatePurchaseRequest))
+		return srv.(BakeryPOSServiceServer).AdjustStock(ctx, req.(*ProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BakeryPOSService_AddToCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Cart)
+func _BakeryPOSService_ReceiveStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BakeryPOSServiceServer).AddToCart(ctx, in)
+		return srv.(BakeryPOSServiceServer).ReceiveStock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BakeryPOSService_AddToCart_FullMethodName,
+		FullMethod: BakeryPOSService_ReceiveStock_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BakeryPOSServiceServer).AddToCart(ctx, req.(*Cart))
+		return srv.(BakeryPOSServiceServer).ReceiveStock(ctx, req.(*ProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BakeryPOSService_GetCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Cart)
+func _BakeryPOSService_StockOpname_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BakeryPOSServiceServer).GetCart(ctx, in)
+		return srv.(BakeryPOSServiceServer).StockOpname(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BakeryPOSService_GetCart_FullMethodName,
+		FullMethod: BakeryPOSService_StockOpname_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BakeryPOSServiceServer).GetCart(ctx, req.(*Cart))
+		return srv.(BakeryPOSServiceServer).StockOpname(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_CreateSale_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).CreateSale(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_CreateSale_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).CreateSale(ctx, req.(*SaleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_PrintReceipt_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).PrintReceipt(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_PrintReceipt_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).PrintReceipt(ctx, req.(*SaleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_GetSalesHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).GetSalesHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_GetSalesHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).GetSalesHistory(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_GenerateReport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).GenerateReport(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_GenerateReport_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).GenerateReport(ctx, req.(*ReportRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).ListUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_ListUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).ListUsers(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).CreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_CreateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).CreateUser(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_UpdateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).UpdateUser(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BakeryPOSService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BakeryPOSServiceServer).DeleteUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BakeryPOSService_DeleteUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BakeryPOSServiceServer).DeleteUser(ctx, req.(*ProductRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -402,6 +760,14 @@ var BakeryPOSService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BakeryPOSService_CreateProduct_Handler,
 		},
 		{
+			MethodName: "UpdateProduct",
+			Handler:    _BakeryPOSService_UpdateProduct_Handler,
+		},
+		{
+			MethodName: "DeleteProduct",
+			Handler:    _BakeryPOSService_DeleteProduct_Handler,
+		},
+		{
 			MethodName: "GetProduct",
 			Handler:    _BakeryPOSService_GetProduct_Handler,
 		},
@@ -410,16 +776,48 @@ var BakeryPOSService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _BakeryPOSService_ListProducts_Handler,
 		},
 		{
-			MethodName: "CreatePurchase",
-			Handler:    _BakeryPOSService_CreatePurchase_Handler,
+			MethodName: "AdjustStock",
+			Handler:    _BakeryPOSService_AdjustStock_Handler,
 		},
 		{
-			MethodName: "AddToCart",
-			Handler:    _BakeryPOSService_AddToCart_Handler,
+			MethodName: "ReceiveStock",
+			Handler:    _BakeryPOSService_ReceiveStock_Handler,
 		},
 		{
-			MethodName: "GetCart",
-			Handler:    _BakeryPOSService_GetCart_Handler,
+			MethodName: "StockOpname",
+			Handler:    _BakeryPOSService_StockOpname_Handler,
+		},
+		{
+			MethodName: "CreateSale",
+			Handler:    _BakeryPOSService_CreateSale_Handler,
+		},
+		{
+			MethodName: "PrintReceipt",
+			Handler:    _BakeryPOSService_PrintReceipt_Handler,
+		},
+		{
+			MethodName: "GetSalesHistory",
+			Handler:    _BakeryPOSService_GetSalesHistory_Handler,
+		},
+		{
+			MethodName: "GenerateReport",
+			Handler:    _BakeryPOSService_GenerateReport_Handler,
+		},
+		{
+			MethodName: "ListUsers",
+			Handler:    _BakeryPOSService_ListUsers_Handler,
+		},
+		{
+			MethodName: "CreateUser",
+			Handler:    _BakeryPOSService_CreateUser_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _BakeryPOSService_UpdateUser_Handler,
+		},
+		{
+			MethodName: "DeleteUser",
+			Handler:    _BakeryPOSService_DeleteUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

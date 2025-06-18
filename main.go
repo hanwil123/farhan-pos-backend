@@ -1,4 +1,4 @@
-package grpcClient
+package main
 
 import (
 	"Farhan-Backend-POS/Router"

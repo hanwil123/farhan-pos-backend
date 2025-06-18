@@ -15,5 +15,5 @@ func ConnectUser() {
 		panic(err)
 	}
 	UDB = connectUser
-	connectUser.AutoMigrate(&dto.UserModel{})
+	connectUser.AutoMigrate(&dto.User{})
 }

@@ -3,21 +3,9 @@ syntax = "proto3";
 
 package proto;
 option go_package = "./proto";
-
-
-service BakeryPOSService {
-  rpc CreateCategory (CategoryRequest) returns (CategoryResponse);
-  rpc ListCategories (Empty) returns (CategoryList);
-  rpc GetCategoryById (GetCategoryByIdRequest) returns (CategoryResponse);
-  rpc CreateProduct (CreateProductRequest) returns (ProductResponse);
-  rpc GetProduct (GetProductRequest) returns (ProductResponse);
-  rpc ListProducts (Empty) returns (ProductList);
-  rpc CreatePurchase (CreatePurchaseRequest) returns (PurchaseResponse);
-  rpc AddToCart (Cart) returns (CartResponse);
-  rpc GetCart (Cart) returns (CartResponse);
-  // Tambahkan RPC lain sesuai kebutuhan
-}
-
+// ==========================================
+// Data Message
+// ==========================================
 message Empty {}
 
 message CategoryRequest {
@@ -30,6 +18,15 @@ message CategoryResponse {
   string name = 2;
 }
 
+message GetCategoryByIdRequest {
+  string id = 1;
+}
+
+message CategoryList {
+  repeated CategoryResponse categories = 1;
+}
+
+
 message Product {
   string id = 1;
   string name = 2;
@@ -40,84 +37,128 @@ message Product {
   string image_url = 7;
 }
 
-message CreateProductRequest {
-  string name = 1;
-  string description = 2;
-  double price = 3;
-  int32 stock_quantity = 4;
-  string category_id = 5;
-  string image_url = 6;
+
+message User {
+  string id = 1;
+  string name = 2;
+  string role = 3;
+  string email = 4;
 }
 
+message Sale {
+  string id = 1;
+  repeated Product items = 2;
+  float total_price = 3;
+  string date = 4;
+}
+
+message Report {
+  string title = 1;
+  string content = 2;
+  string generated_at = 3;
+}
+
+// ==========================================
+// Request/Response
+// ==========================================
+message ProductRequest {
+  string id = 1;
+}
+message ProductListResponse {
+  repeated Product products = 1;
+}
 message ProductResponse {
   Product product = 1;
 }
-
-message ProductList {
-  repeated Product products = 1;
+message CreateProductRequest {
+  Product product = 1;
 }
-
-message GetProductRequest {
+message UpdateProductRequest {
+  Product product = 1;
+}
+message DeleteProductRequest {
   string id = 1;
 }
 
-message Customer {
-  string id = 1;
-  string name = 2;
-  string email = 3;
-  string phone = 4;
-  string address = 5;
+message SaleRequest {
+  repeated Product items = 1;
+}
+message SaleResponse {
+  Sale sale = 1;
 }
 
-message CartItem {
-  string id = 1;
-  string cart_id = 2;
-  string product_id = 3;
-  int32 quantity = 4;
-  double subtotal = 5;
+message ReportRequest {
+  string from_date = 1;
+  string to_date = 2;
+}
+message ReportResponse {
+  repeated Report reports = 1;
 }
 
-message CartResponse {
-    string id = 1;
-    string cart_id = 2;
-    string customer_id = 3;
-    string product_id = 4;
-    int32 quantity = 5;
-    double subtotal = 6;
-    string status = 7;
+message ListSale {
+  repeated Sale saleList = 1;
 }
 
-message Cart {
-  string id = 1;
-  string customer_id = 2;
-  string status = 3;
-  repeated CartItem items = 4;
+message UserList {
+  repeated User userList = 1;
 }
 
-message CreatePurchaseRequest {
-  string customer_id = 1;
-  string payment_type = 2;
-  repeated PurchaseItem items = 3;
+message DeleteProductResponse {
+  string messageSuccesfull = 1;
 }
+// ==========================================
+// Service
+// ==========================================
+service BakeryPOSService  {
 
-message PurchaseItem {
-  string product_id = 1;
-  int32 quantity = 2;
-  double price = 3;
-  double subtotal = 4;
+  // ================================
+  // 🔐 ADMIN / MANAJER / GUDANG
+  // ================================
+
+  // Produk
+  rpc CreateCategory (CategoryRequest) returns (CategoryResponse);
+  rpc ListCategories (Empty) returns (CategoryList);
+  rpc GetCategoryById (GetCategoryByIdRequest) returns (CategoryResponse);
+  rpc CreateProduct(CreateProductRequest) returns (ProductResponse);       // Admin, Manajer
+  rpc UpdateProduct(UpdateProductRequest) returns (ProductResponse);       // Admin, Manajer
+  rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);                 // Admin
+  rpc GetProduct(ProductRequest) returns (ProductResponse);                // Semua Role
+  rpc ListProducts(Empty) returns (ProductListResponse);                   // Semua Role
+
+  // ================================
+  // 🔐 GUDANG
+  // ================================
+
+  // Manajemen Stok (sama dengan produk, tapi bisa ditambah fitur stok manual)
+  rpc AdjustStock(ProductRequest) returns (ProductResponse);               // Gudang
+  rpc ReceiveStock(ProductRequest) returns (ProductResponse);              // Gudang
+  rpc StockOpname(Empty) returns (ProductListResponse);                    // Gudang
+
+  // ================================
+  // 🔐 KASIR
+  // ================================
+
+  // Transaksi Penjualan
+  rpc CreateSale(SaleRequest) returns (SaleResponse);                      // Kasir
+  rpc PrintReceipt(SaleRequest) returns (SaleResponse);                    // Kasir
+  rpc GetSalesHistory(Empty) returns (ListSale);                      // Kasir, Admin
+
+  // ================================
+  // 🔐 ADMIN / MANAJER
+  // ================================
+
+  // Laporan
+  rpc GenerateReport(ReportRequest) returns (ReportResponse);             // Admin, Manajer
+
+  // ================================
+  // 🔐 ADMIN
+  // ================================
+
+  // Manajemen User
+  rpc ListUsers(Empty) returns (UserList);                           // Admin
+  rpc CreateUser(User) returns (User);                                    // Admin
+  rpc UpdateUser(User) returns (User);                                    // Admin
+  rpc DeleteUser(ProductRequest) returns (Empty);                         // Admin
+
+  // Pengaturan Toko dan Promo bisa ditambahkan juga nanti.
 }
-
-message PurchaseResponse {
-  string purchase_id = 1;
-  double total_amount = 2;
-  string purchased_at = 3;
-}
-
-message GetCategoryByIdRequest {
-  string id = 1;
-}
-
-message CategoryList {
-  repeated CategoryResponse categories = 1;
-}
-

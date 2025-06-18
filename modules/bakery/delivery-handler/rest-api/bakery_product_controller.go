@@ -61,12 +61,14 @@ func CreateProductControllerApi(c *fiber.Ctx) error {
 	defer cancel()
 
 	responseAddProduct, errorAddProduct := grpcClient.BakeryPOSClient.CreateProduct(ctx, &proto.CreateProductRequest{
-		Name:          data.Name,
-		Description:   data.Description,
-		Price:         data.Price,
-		StockQuantity: int32(data.StockQuantity),
-		CategoryId:    strconv.FormatUint(data.CategoryID, 10),
-		ImageUrl:      data.ImageURL,
+		Product: &proto.Product{
+			Name:          data.Name,
+			Description:   data.Description,
+			Price:         data.Price,
+			StockQuantity: int32(data.StockQuantity),
+			CategoryId:    strconv.FormatUint(data.CategoryID, 10),
+			ImageUrl:      data.ImageURL,
+		},
 	})
 	if errorAddProduct != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -121,5 +123,85 @@ func GetCategorieControllerApi(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"categories": response.Categories,
+	})
+}
+
+func UpdateProductControllerApi(c *fiber.Ctx) error {
+	productId := c.Params("id")
+	if productId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Product ID is required",
+		})
+	}
+	var data dto.Product
+	if err := c.BodyParser(&data); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid request body",
+		})
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	responseUpdateProduct, err := grpcClient.BakeryPOSClient.UpdateProduct(ctx, &proto.UpdateProductRequest{
+		Product: &proto.Product{
+			Id:            productId,
+			Name:          data.Name,
+			Description:   data.Description,
+			Price:         data.Price,
+			StockQuantity: int32(data.StockQuantity),
+			CategoryId:    strconv.FormatUint(data.CategoryID, 10),
+			ImageUrl:      data.ImageURL,
+		},
+	})
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to update productttttttttt: " + err.Error(),
+		})
+	}
+	return c.JSON(fiber.Map{
+		"Id":             responseUpdateProduct.Product.Id,
+		"Name":           responseUpdateProduct.Product.Name,
+		"Description":    responseUpdateProduct.Product.Description,
+		"Price":          responseUpdateProduct.Product.Price,
+		"Stock Quantity": responseUpdateProduct.Product.StockQuantity,
+		"Image Url":      responseUpdateProduct.Product.ImageUrl,
+	})
+}
+
+func GetAllProduct(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	responseProduct, err := grpcClient.BakeryPOSClient.ListProducts(ctx, &proto.Empty{})
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to get product: " + err.Error(),
+		})
+	}
+	return c.JSON(fiber.Map{
+		"Product": responseProduct.Products,
+	})
+}
+
+func DeleteProductControllerApi(c *fiber.Ctx) error {
+	productId := c.Params("id")
+	if productId == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Product ID is required",
+		})
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	responseDeleteProduct, err := grpcClient.BakeryPOSClient.DeleteProduct(ctx, &proto.DeleteProductRequest{
+		Id: productId,
+	})
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to delete product: " + err.Error(),
+		})
+	}
+	return c.JSON(fiber.Map{
+		"message": responseDeleteProduct.MessageSuccesfull,
 	})
 }

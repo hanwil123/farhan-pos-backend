@@ -138,3 +138,68 @@ func GetCategoryById(id uint64) (*dto.ProductCategory, error) {
 
 	return &category, nil
 }
+
+func UpdateProductRepo(id uint64, name, description string, price float64, stock_quantity int, categoryID uint64, imageURL string) (*dto.Product, error) {
+	if database.PDB == nil {
+		return nil, errors.New("product database connection is not initialized")
+	}
+
+	// Find existing product
+	var product dto.Product
+	if err := database.PDB.First(&product, id).Error; err != nil {
+		return nil, fmt.Errorf("product not found: %v", err)
+	}
+
+	// Update product fields
+	updates := map[string]interface{}{
+		"name":           strings.TrimSpace(name),
+		"description":    strings.TrimSpace(description),
+		"price":          price,
+		"stock_quantity": stock_quantity,
+		"category_id":    categoryID,
+		"image_url":      strings.TrimSpace(imageURL),
+	}
+
+	// Perform update
+	if err := database.PDB.Model(&product).Updates(updates).Error; err != nil {
+		return nil, fmt.Errorf("failed to update product: %v", err)
+	}
+
+	// Refresh product data from database
+	if err := database.PDB.First(&product, id).Error; err != nil {
+		return nil, fmt.Errorf("failed to refresh product data: %v", err)
+	}
+
+	return &product, nil
+}
+
+func ListProductsRepo() ([]dto.Product, error) {
+	if database.CDB == nil {
+		fmt.Println("ERROR: Koneksi database kategori tidak diinisialisasi.")
+		return nil, errors.New("category database connection is not initialized")
+	}
+
+	var products []dto.Product
+
+	resultListProducts := database.PDB.Find(&products)
+	if resultListProducts.Error != nil {
+		fmt.Printf("ERROR: Gagal mendapatkan products dari database: %v\n", resultListProducts.Error)
+		return nil, fmt.Errorf("failed to get products: %v", resultListProducts.Error)
+	}
+	return products, nil
+}
+
+func DeleteProductRepo(id uint64) (*dto.Product, error) {
+	if database.PDB == nil {
+		return nil, errors.New("product database connection is not initialized")
+	}
+
+	var product dto.Product
+
+	resultDeleteProduct := database.PDB.Where("id = ?", id).Delete(&product)
+	if resultDeleteProduct.Error != nil {
+		fmt.Printf("ERROR: Gagal delete products dari database: %v\n", resultDeleteProduct.Error)
+		return nil, fmt.Errorf("failed to delete products: %v", resultDeleteProduct.Error)
+	}
+	return &product, nil
+}
